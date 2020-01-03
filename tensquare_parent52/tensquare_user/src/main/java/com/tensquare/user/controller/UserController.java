@@ -1,23 +1,17 @@
 package com.tensquare.user.controller;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.tensquare.user.pojo.User;
 import com.tensquare.user.service.UserService;
-
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 /**
  * 控制器层
  * @author Administrator
@@ -33,6 +27,21 @@ public class UserController {
 
 	@Autowired
 	private RedisTemplate redisTemplate;
+
+
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public Result login(@RequestBody User user){
+		user = userService.login(user.getMobile(), user.getPassword());
+		if(user==null){
+			return new Result(false, StatusCode.LOGINERROR, "登录失败");
+		}
+		Map<String, Object> map = new HashMap<>();
+		/*String token = jwtUtil.createJWT(user.getId(), user.getMobile(), "user");
+		Map<String, Object> map = new HashMap<>();
+		map.put("token", token);
+		map.put("roles", "user");*/
+		return new Result(true, StatusCode.OK, "登录成功", map);
+	}
 
 	/**
 	 * 发送短信验证码
