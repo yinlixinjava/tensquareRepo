@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import util.IdWorker;
+import util.JwtUtil;
+
 @SpringBootApplication
 public class UserApplication {
 
@@ -22,8 +24,8 @@ public class UserApplication {
 		return new BCryptPasswordEncoder();
 	}
 
-	/*@Bean
+	@Bean
 	public JwtUtil jwtUtil(){
 		return new JwtUtil();
-	}*/
+	}
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
+import util.JwtUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,8 @@ public class UserController {
 	@Autowired
 	private RedisTemplate redisTemplate;
 
+	@Autowired
+	private JwtUtil jwtUtil;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public Result login(@RequestBody User user){
@@ -36,10 +39,10 @@ public class UserController {
 			return new Result(false, StatusCode.LOGINERROR, "登录失败");
 		}
 		Map<String, Object> map = new HashMap<>();
-		/*String token = jwtUtil.createJWT(user.getId(), user.getMobile(), "user");
-		Map<String, Object> map = new HashMap<>();
+		String token = jwtUtil.createJWT(user.getId(), user.getMobile(), "user");
 		map.put("token", token);
-		map.put("roles", "user");*/
+		map.put("roles", "user");
+		System.out.println("toker:"+token);
 		return new Result(true, StatusCode.OK, "登录成功", map);
 	}
 
