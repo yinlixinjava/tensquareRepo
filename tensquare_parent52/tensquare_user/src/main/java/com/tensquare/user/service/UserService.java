@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import util.IdWorker;
 import util.JwtUtil;
 
@@ -113,6 +114,7 @@ public class UserService {
 		user.setRegdate(new Date());//注册日期
 		user.setUpdatedate(new Date());//更新日期
 		user.setLastdate(new Date());//最后登陆日期
+		user.setPassword(encoder.encode(user.getPassword()));
 		userDao.save(user);
 	}
 
@@ -205,4 +207,10 @@ public class UserService {
 		//在控制台显示一份【方便测试】
 		System.out.println("验证码为："+checkcode);
     }
+
+	@Transactional
+	public void updatefanscountandfollowcount(int x, String userid, String friendid) {
+		userDao.updatefanscount(x, friendid);
+		userDao.updatefollowcount(x, userid);
+	}
 }

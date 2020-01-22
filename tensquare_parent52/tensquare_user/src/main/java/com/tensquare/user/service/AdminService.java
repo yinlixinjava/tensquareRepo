@@ -14,6 +14,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,9 @@ public class AdminService {
 
 	@Autowired
 	private BCryptPasswordEncoder encoder;
+
+	@Autowired
+	private HttpServletRequest request;
 
 	public Admin login(Admin admin) {
 		//先根据用户名查询对象。
@@ -114,6 +118,10 @@ public class AdminService {
 	 * @param id
 	 */
 	public void deleteById(String id) {
+		String token = (String) request.getAttribute("claims_admin");
+		if (token==null || "".equals(token)){
+			throw new RuntimeException("权限不足！");
+		}
 		adminDao.deleteById(id);
 	}
 
